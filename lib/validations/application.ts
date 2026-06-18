@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const jobType = z.enum(["Hybrid", "On-site", "Remote"], {
+const jobType = z.enum(["Hybrid", "Onsite", "Remote"], {
   error: "Job type is required",
 });
 

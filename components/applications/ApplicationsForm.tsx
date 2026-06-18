@@ -98,7 +98,7 @@ export default function ApplicationForm() {
           aria-invalid={!!errors.jobType}
         >
           <option value="">Select job type</option>
-          <option value="On-site">On-site</option>
+          <option value="Onsite">On-site</option>
           <option value="Remote">Remote</option>
           <option value="Hybrid">Hybrid</option>
         </select>

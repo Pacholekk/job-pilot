@@ -1,0 +1,62 @@
+import { prisma } from "@/lib/prisma";
+import { applicationSchema } from "@/lib/validations/application";
+import { NextResponse } from "next/server";
+import z from "zod";
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  const applicationId = Number(id);
+
+  if (Number.isNaN(applicationId)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
+
+  const body = await request.json();
+  const parsed = applicationSchema.safeParse(body);
+
+  if (!parsed.success)
+    return NextResponse.json(
+      {
+        errors: z.flattenError(parsed.error).fieldErrors,
+      },
+      { status: 400 },
+    );
+
+  const application = await prisma.application.update({
+    where: {
+      id: applicationId,
+    },
+    data: {
+      company: parsed.data.company,
+      position: parsed.data.position,
+      location: parsed.data.location,
+      offerUrl: parsed.data.offerUrl,
+      jobType: parsed.data.jobType,
+      techStack: parsed.data.techStack,
+      salary: parsed.data.salary,
+      jobDescription: parsed.data.jobDescription,
+    },
+  });
+  return NextResponse.json(application, { status: 200 });
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  const applicationId = Number(id);
+
+  if (Number.isNaN(applicationId)) {
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  }
+
+  await prisma.application.delete({ where: { id: applicationId } });
+
+  return NextResponse.json({
+    message: "Application deleted successfully",
+  });
+}
