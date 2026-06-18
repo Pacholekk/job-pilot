@@ -1,65 +1,130 @@
-import Image from "next/image";
+import Dashboard from "@/components/Dasboard/Dashboard";
+import PageHeader from "@/components/PageHeader/PageHeader";
+
+const mockStats = [
+  {
+    label: "Total applications",
+    value: 24,
+    trend: "+3 this week",
+    trendColor: "positive" as const,
+  },
+  {
+    label: "Applied this week",
+    value: 5,
+    trend: "+2 vs last week",
+    trendColor: "positive" as const,
+  },
+  {
+    label: "Interviews",
+    value: 3,
+    trend: "1 upcoming",
+    trendColor: "neutral" as const,
+  },
+  {
+    label: "Response rate",
+    value: "42%",
+    trend: "+6%",
+    trendColor: "positive" as const,
+  },
+];
+
+const mockApplications = [
+  {
+    companyInitials: "ST",
+    jobTitle: "Senior Frontend Engineer",
+    companyName: "Stripe",
+    status: "Interview" as const,
+    score: 92,
+  },
+  {
+    companyInitials: "VE",
+    jobTitle: "Full Stack Engineer",
+    companyName: "Vercel",
+    status: "Applied" as const,
+    score: 88,
+  },
+  {
+    companyInitials: "LI",
+    jobTitle: "Product Engineer",
+    companyName: "Linear",
+    status: "Screening" as const,
+    score: 84,
+  },
+  {
+    companyInitials: "FI",
+    jobTitle: "Senior Frontend Engineer",
+    companyName: "Figma",
+    status: "Applied" as const,
+    score: 81,
+  },
+  {
+    companyInitials: "SU",
+    jobTitle: "Developer Experience Engineer",
+    companyName: "Supabase",
+    status: "Interview" as const,
+    score: 90,
+  },
+];
+
+const mockStatusData = [
+  { label: "Saved", count: 4, color: "#9ca3af" },
+  { label: "Screening", count: 5, color: "#f97316" },
+  { label: "Offer", count: 1, color: "#10b981" },
+  { label: "Applied", count: 7, color: "#3b82f6" },
+  { label: "Interview", count: 3, color: "#a855f7" },
+  { label: "Rejected", count: 4, color: "#ef4444" },
+];
+
+const mockInsights = [
+  "Stripe and Supabase roles have the highest match scores (90+).",
+  "Follow up on Vercel and Figma applications — no response after 5 days.",
+  "Most listings mention GraphQL and CI/CD — consider adding these to your profile.",
+];
+
+const mockOffers = [
+  {
+    companyInitials: "ST",
+    companyName: "Stripe",
+    jobTitle: "Senior Frontend Engineer",
+    matchScore: 92,
+    tags: ["React", "TypeScript", "Next.js"],
+    salaryRange: "$180k–$220k",
+    location: "Remote",
+  },
+  {
+    companyInitials: "SU",
+    companyName: "Supabase",
+    jobTitle: "Developer Experience Engineer",
+    matchScore: 90,
+    tags: ["TypeScript", "Docs", "Open Source"],
+    salaryRange: "$150k–$190k",
+    location: "Remote",
+  },
+  {
+    companyInitials: "VE",
+    companyName: "Vercel",
+    jobTitle: "Full Stack Engineer",
+    matchScore: 88,
+    tags: ["Next.js", "React", "Edge"],
+    salaryRange: "$160k–$200k",
+    location: "Remote",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+      <PageHeader
+        title="Dashboard"
+        description="Track your job search progress and AI insights."
+      />
+      <Dashboard
+        stats={mockStats}
+        recentApplications={mockApplications}
+        statusData={mockStatusData}
+        insights={mockInsights}
+        offers={mockOffers}
+      />
+    </>
   );
 }
