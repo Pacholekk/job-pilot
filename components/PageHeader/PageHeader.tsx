@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../ui/button";
 
 export interface PageHeaderProps {
@@ -14,7 +15,9 @@ export default function PageHeader({ title, description }: PageHeaderProps) {
       </div>
       <div className="flex  mr-4 items-center gap-3 ">
         <Button>x</Button>
-        <Button>+ Add application</Button>
+        <Button asChild>
+          <Link href="/applications/new">+ Add Application </Link>
+        </Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../ui/button";
 
 export default function NavBar() {
@@ -18,9 +19,8 @@ export default function NavBar() {
           </Button>
         </div>
         <div>
-          <Button variant={"outline"} className="cursor-pointer" size="lg">
-            {" "}
-            Add application{" "}
+          <Button asChild>
+            <Link href="/applications/new">+ Add Application </Link>
           </Button>
         </div>
       </div>
