@@ -9,18 +9,46 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
-export default function ApplicationForm() {
+type ApplicationFormProps = {
+  defaultValues?: ApplicationFormData;
+  applicationId?: number;
+};
+
+export default function ApplicationForm({
+  defaultValues,
+  applicationId,
+}: ApplicationFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
+    defaultValues,
   });
-
-  const onSubmit = (data: ApplicationFormData) => {
-    console.log(data);
+  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: async (data: ApplicationFormData) => {
+      const response = await fetch(
+        applicationId
+          ? `/api/applications/${applicationId}`
+          : "/api/applications/",
+        {
+          method: applicationId ? "PUT" : "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+      if (!response.ok) throw new Error("Nie udało się zapisać aplikacji");
+      return response.json();
+    },
+    onSuccess: () => router.push("/applications"),
+  });
+  const onSubmit = async (data: ApplicationFormData) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -108,6 +136,29 @@ export default function ApplicationForm() {
           </span>
         )}
       </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="status">Status</label>
+        <select
+          id="status"
+          {...register("status")}
+          className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          aria-invalid={!!errors.status}
+        >
+          <option value="">Select application status</option>
+          <option value="Saved">Saved</option>
+          <option value="Applied">Applied</option>
+          <option value="Screening">Screening</option>
+          <option value="Interview">Interview</option>
+          <option value="Ghosted">Ghosted</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        {errors.status && (
+          <span className="text-sm text-destructive">
+            {errors.status.message}
+          </span>
+        )}
+      </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="techStack">Tech stack</label>
@@ -157,9 +208,10 @@ export default function ApplicationForm() {
         )}
       </div>
 
-      <Button type="submit" className="mt-2 w-fit">
-        Save application
+      <Button type="submit" className="mt-2 w-fit" disabled={isSubmitting}>
+        {isSubmitting ? "Saving..." : "Save application"}
       </Button>
+      {errors.root && <p className="text-red-500">{errors.root.message}</p>}
     </form>
   );
 }

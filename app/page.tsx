@@ -28,44 +28,6 @@ const mockStats = [
   },
 ];
 
-const mockApplications = [
-  {
-    companyInitials: "ST",
-    jobTitle: "Senior Frontend Engineer",
-    companyName: "Stripe",
-    status: "Interview" as const,
-    score: 92,
-  },
-  {
-    companyInitials: "VE",
-    jobTitle: "Full Stack Engineer",
-    companyName: "Vercel",
-    status: "Applied" as const,
-    score: 88,
-  },
-  {
-    companyInitials: "LI",
-    jobTitle: "Product Engineer",
-    companyName: "Linear",
-    status: "Screening" as const,
-    score: 84,
-  },
-  {
-    companyInitials: "FI",
-    jobTitle: "Senior Frontend Engineer",
-    companyName: "Figma",
-    status: "Applied" as const,
-    score: 81,
-  },
-  {
-    companyInitials: "SU",
-    jobTitle: "Developer Experience Engineer",
-    companyName: "Supabase",
-    status: "Interview" as const,
-    score: 90,
-  },
-];
-
 const mockStatusData = [
   { label: "Saved", count: 4, color: "#9ca3af" },
   { label: "Screening", count: 5, color: "#f97316" },
@@ -120,7 +82,6 @@ export default function Home() {
       />
       <Dashboard
         stats={mockStats}
-        recentApplications={mockApplications}
         statusData={mockStatusData}
         insights={mockInsights}
         offers={mockOffers}

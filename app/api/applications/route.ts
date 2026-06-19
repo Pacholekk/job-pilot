@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { applicationSchema } from "@/lib/validations/application";
 import { NextResponse } from "next/server";
-import { parse } from "path";
 import z from "zod";
 
 export async function GET() {
@@ -30,6 +29,7 @@ export async function POST(request: Request) {
       location: parsed.data.location,
       offerUrl: parsed.data.offerUrl,
       jobType: parsed.data.jobType,
+      status: parsed.data.status,
       techStack: parsed.data.techStack,
       salary: parsed.data.salary,
       jobDescription: parsed.data.jobDescription,

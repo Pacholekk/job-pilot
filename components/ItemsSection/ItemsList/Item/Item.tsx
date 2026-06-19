@@ -6,6 +6,7 @@ export type ApplicationStatus =
   | "Applied"
   | "Screening"
   | "Interview"
+  | "Ghosted"
   | "Offer"
   | "Rejected";
 
@@ -21,6 +22,7 @@ const statusStyles: Record<ApplicationStatus, string> = {
   Saved: "bg-gray-100 text-gray-700",
   Applied: "bg-blue-100 text-blue-700",
   Screening: "bg-orange-100 text-orange-700",
+  Ghosted: "bg-gray-, text-gray-700",
   Interview: "bg-purple-100 text-purple-700",
   Offer: "bg-emerald-100 text-emerald-700",
   Rejected: "bg-red-100 text-red-700",
@@ -43,7 +45,9 @@ export default function Item({
         <p className="truncate text-sm text-muted-foreground">{companyName}</p>
       </div>
       <Badge className={cn("shrink-0", statusStyles[status])}>{status}</Badge>
-      <span className="w-8 shrink-0 text-right text-sm font-medium">{score}</span>
+      <span className="w-8 shrink-0 text-right text-sm font-medium">
+        {score}
+      </span>
     </div>
   );
 }

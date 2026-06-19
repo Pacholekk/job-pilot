@@ -21,6 +21,7 @@ model Application {
   offerUrl       String?
   jobType        JobType
   techStack      String
+  status         Status   @default(Saved)
   salary         Int?
   jobDescription String
   createdAt      DateTime @default(now())
@@ -32,4 +33,14 @@ enum JobType {
   Hybrid
   Onsite
   Remote
+}
+
+enum Status {
+  Saved
+  Applied
+  Screening
+  Interview
+  Ghosted
+  Offer
+  Rejected
 }

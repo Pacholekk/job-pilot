@@ -9,13 +9,13 @@ export default function NavBar() {
         <div>
           <Button variant={"outline"} size="lg" className="cursor-pointer">
             {" "}
-            Dashboard{" "}
+            <Link href="/">Dashboard </Link>
           </Button>
         </div>
         <div>
           <Button variant={"outline"} className="cursor-pointer" size="lg">
             {" "}
-            Applications{" "}
+            <Link href="/applications">Applications </Link>
           </Button>
         </div>
         <div>

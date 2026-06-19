@@ -25,26 +25,24 @@ export async function PUT(
       { status: 400 },
     );
 
-  const application = await prisma.application.update({
-    where: {
-      id: applicationId,
-    },
-    data: {
-      company: parsed.data.company,
-      position: parsed.data.position,
-      location: parsed.data.location,
-      offerUrl: parsed.data.offerUrl,
-      jobType: parsed.data.jobType,
-      techStack: parsed.data.techStack,
-      salary: parsed.data.salary,
-      jobDescription: parsed.data.jobDescription,
-    },
-  });
-  return NextResponse.json(application, { status: 200 });
+  try {
+    const application = await prisma.application.update({
+      where: {
+        id: applicationId,
+      },
+      data: parsed.data,
+    });
+    return NextResponse.json(application, { status: 200 });
+  } catch {
+    return NextResponse.json(
+      { error: "Application not found" },
+      { status: 404 },
+    );
+  }
 }
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
@@ -54,9 +52,16 @@ export async function DELETE(
     return NextResponse.json({ error: "Invalid id" }, { status: 400 });
   }
 
-  await prisma.application.delete({ where: { id: applicationId } });
+  try {
+    await prisma.application.delete({ where: { id: applicationId } });
 
-  return NextResponse.json({
-    message: "Application deleted successfully",
-  });
+    return NextResponse.json({
+      message: "Application deleted successfully",
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to delete application" },
+      { status: 404 },
+    );
+  }
 }
