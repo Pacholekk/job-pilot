@@ -14,3 +14,15 @@ export interface ApplicationRow {
   salaryRange: string;
   addedAt: Date;
 }
+
+export interface ApplicationFilters {
+  search: string;
+  jobType: JobType | "all";
+  status: ApplicationStatus | "all";
+}
+
+export const DEFAULT_APPLICATION_FILTERS: ApplicationFilters = {
+  search: "",
+  status: "all",
+  jobType: "all",
+};

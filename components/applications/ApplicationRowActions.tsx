@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 interface ApplicationRowActionsProps {
   applicationId: number;
@@ -18,6 +20,20 @@ interface ApplicationRowActionsProps {
 export default function ApplicationRowActions({
   applicationId,
 }: ApplicationRowActionsProps) {
+  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch(`/api/applications/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete");
+      return response.json();
+    },
+    onSuccess: () => router.refresh(),
+  });
+  const handleDelete = async (id: number) => {
+    mutation.mutate(id);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,7 +53,12 @@ export default function ApplicationRowActions({
         <DropdownMenuItem asChild>
           <Link href={`/applications/edit/${applicationId}`}>Edit</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={() => handleDelete(applicationId)}
+        >
+          Delete
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
