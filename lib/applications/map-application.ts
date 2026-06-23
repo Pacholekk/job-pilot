@@ -1,4 +1,4 @@
-import type { Application } from "@/lib/generated/prisma/client";
+import type { Application, JobType } from "@/lib/generated/prisma/client";
 import type {
   ApplicationStatus,
   ItemProps,
@@ -6,14 +6,17 @@ import type {
 import type { StatusSegment } from "@/components/ApplicationStatus/ApplicationStatus";
 import type { ApplicationRow } from "./types";
 
-const statuses: ApplicationStatus[] = [
+export const statuses: ApplicationStatus[] = [
   "Saved",
   "Applied",
   "Screening",
   "Interview",
+  "Ghosted",
   "Offer",
   "Rejected",
 ];
+
+export const jobTypes: JobType[] = ["Remote", "Hybrid", "Onsite"];
 
 function getCompanyInitials(company: string) {
   return company
@@ -47,9 +50,7 @@ type StatusCount = {
   };
 };
 
-export function mapStatusCountToSegment(
-  items: StatusCount[],
-): StatusSegment[] {
+export function mapStatusCountToSegment(items: StatusCount[]): StatusSegment[] {
   return items.map((item) => ({
     label: item.status,
     count: item._count.status,
