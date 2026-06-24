@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 
 export interface PageHeaderProps {
@@ -8,17 +9,17 @@ export interface PageHeaderProps {
 
 export default function PageHeader({ title, description }: PageHeaderProps) {
   return (
-    <div className="flex w-full justify-between border-b-1  p-5">
-      <div className="flex flex-col ml-4 ">
-        <span>{title} </span>
-        <span>{description} </span>
+    <header className="flex w-full items-center justify-between gap-4 border-b border-border px-6 py-5">
+      <div className="flex flex-col gap-0.5">
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-      <div className="flex  mr-4 items-center gap-3 ">
-        <Button>x</Button>
-        <Button asChild>
-          <Link href="/applications/new">+ Add Application </Link>
-        </Button>
-      </div>
-    </div>
+      <Button asChild className="gap-2">
+        <Link href="/applications/new">
+          <PlusIcon className="size-4" />
+          Add Application
+        </Link>
+      </Button>
+    </header>
   );
 }

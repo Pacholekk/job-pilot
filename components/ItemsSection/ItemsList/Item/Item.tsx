@@ -22,7 +22,7 @@ const statusStyles: Record<ApplicationStatus, string> = {
   Saved: "bg-gray-100 text-gray-700",
   Applied: "bg-blue-100 text-blue-700",
   Screening: "bg-orange-100 text-orange-700",
-  Ghosted: "bg-gray-, text-gray-700",
+  Ghosted: "bg-gray-100 text-gray-700",
   Interview: "bg-purple-100 text-purple-700",
   Offer: "bg-emerald-100 text-emerald-700",
   Rejected: "bg-red-100 text-red-700",
