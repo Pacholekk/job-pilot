@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { ApplicationStatus } from "@/components/ItemsSection/ItemsList/Item/Item";
 
-const statusConfig: Record<
+export const statusConfig: Record<
   ApplicationStatus,
   { bg: string; text: string; dot: string }
 > = {

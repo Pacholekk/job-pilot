@@ -49,7 +49,9 @@ export default function ApplicationRowActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>View details</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/applications/${applicationId}`}>View details</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href={`/applications/edit/${applicationId}`}>Edit</Link>
         </DropdownMenuItem>
