@@ -26,12 +26,16 @@ export default async function ViewApplicationPage({
   }
 
   return (
-    <>
+    <div className="p-10">
       <ApplicationHeader
-        title={application.position}
-        description={application.jobDescription}
-        badges={[application.jobType, application.status]}
+        id={String(application.id)}
+        companyInitials={application.company.slice(0, 2).toUpperCase()}
+        jobTitle={application.position}
+        companyName={application.company}
+        location={application.location}
+        status={application.status}
+        jobType={application.jobType}
       />
-    </>
+    </div>
   );
 }
