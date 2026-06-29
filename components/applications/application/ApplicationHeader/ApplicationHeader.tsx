@@ -1,5 +1,6 @@
 "use client";
 import { SquarePen } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import ApplicationStatusBadge from "@/components/applications/ApplicationStatusBadge";
@@ -8,6 +9,7 @@ import { JobType, Status } from "@/lib/generated/prisma/enums";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { applicationSchema } from "@/lib/validations/application";
 
 interface ApplicationHeaderProps {
   id: string;
@@ -43,6 +45,14 @@ export default function ApplicationHeader({
     onError: () => alert("Failed to change status"),
   });
 
+  const updateApplicationStatus = (id: number, status: string) => {
+    const validStatus = applicationSchema
+      .pick({ status: true })
+      .safeParse({ status });
+
+    if (!validStatus.success) throw new Error("Failed validating status");
+  };
+
   return (
     <div className="rounded-2xl border bg-card p-6">
       <div className="flex items-start gap-5">
@@ -64,9 +74,11 @@ export default function ApplicationHeader({
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button variant="outline">
-              <SquarePen />
-              Edit
+            <Button variant="outline" asChild>
+              <Link href={`/applications/edit/${id}`} className="gap-2">
+                <SquarePen className="size-4" />
+                Edit
+              </Link>
             </Button>
             <select
               className="border-1 border-gray-200 rounded-xl appearance-none px-3 py-1"
