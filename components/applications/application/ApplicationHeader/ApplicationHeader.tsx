@@ -63,7 +63,7 @@ export default function ApplicationHeader({
             </span>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2">
             <Button variant="outline">
               <SquarePen />
               Edit
