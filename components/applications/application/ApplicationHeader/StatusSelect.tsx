@@ -14,7 +14,7 @@ export function StatusSelect({ id, currentStatus }: StatusSelectProps) {
 
   return (
     <select
-      className="border-1 border-gray-200 rounded-xl appearance-none px-3 py-1"
+      className="border border-gray-200 rounded-xl appearance-none px-3 py-1"
       value={currentStatus}
       onChange={(e) => {
         startTransition(() => updateApplicationStatus(id, e.target.value));

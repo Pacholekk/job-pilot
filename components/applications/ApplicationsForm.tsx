@@ -2,6 +2,7 @@
 
 import {
   ApplicationFormData,
+  ApplicationFormOutput,
   applicationSchema,
 } from "@/lib/validations/application";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,13 +26,13 @@ export default function ApplicationForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ApplicationFormData>({
+  } = useForm<ApplicationFormData, unknown, ApplicationFormOutput>({
     resolver: zodResolver(applicationSchema),
     defaultValues,
   });
   const router = useRouter();
   const mutation = useMutation({
-    mutationFn: async (data: ApplicationFormData) => {
+    mutationFn: async (data: ApplicationFormOutput) => {
       const response = await fetch(
         applicationId
           ? `/api/applications/${applicationId}`
@@ -48,7 +49,7 @@ export default function ApplicationForm({
     onSuccess: () => router.push("/applications"),
   });
 
-  const onSubmit = async (data: ApplicationFormData) => {
+  const onSubmit = async (data: ApplicationFormOutput) => {
     await mutation.mutate(data);
   };
 

@@ -32,7 +32,7 @@ export default async function EditApplicationPage({
           company: application.company,
           position: application.position,
           location: application.location,
-          offerUrl: application.offerUrl ?? undefined,
+          offerUrl: application.offerUrl ?? "",
           jobType: application.jobType,
           status: application.status,
           techStack: application.techStack,

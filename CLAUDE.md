@@ -37,32 +37,42 @@ Requires `DATABASE_URL` set in `.env` (PostgreSQL connection string).
 
 `@/` resolves to the project root (configured in `tsconfig.json`).
 
-### API layer
+### Data access — two patterns in use
 
-REST routes under `app/api/applications/`:
-- `route.ts` — `GET` (list all) and `POST` (create)
-- `[id]/route.ts` — `PUT` (update) and `DELETE`
-
-All routes validate request bodies with the shared `applicationSchema` from `lib/validations/application.ts`, then write to Postgres via the Prisma singleton.
-
-### Data flow
-
+**Server pages query Prisma directly** (no HTTP hop):
 ```
-Page (app/applications/) → fetch → API route (app/api/applications/)
-                                      ↓
-                              lib/validations/   (Zod parse)
-                                      ↓
-                              lib/prisma.ts      (Prisma + pg adapter)
-                                      ↓
-                                 PostgreSQL
+app/applications/page.tsx  →  lib/prisma.ts  →  PostgreSQL
+                                    ↓
+                         lib/applications/map-application.ts
+                                    ↓
+                           ApplicationRow[]  →  Client component
 ```
+
+**Mutations use Server Actions** (`app/applications/actions.ts`, `"use server"`):
+- Validate with `applicationSchema`, write via Prisma, then call `revalidatePath()` to bust the page cache.
+- Client components call the action directly — no `fetch` needed.
+
+**REST routes** (`app/api/applications/`) still exist for `POST` (create) and `PUT`/`DELETE` (update/delete), validated via `applicationSchema` from `lib/validations/application.ts`.
+
+### Filtering
+
+Filtering is **client-side only** — all rows are passed as `initialRows` props at SSR time. `ApplicationList` syncs active filters to URL search params (so links are shareable) and memoises the filtered subset. Filter helpers:
+- `filters/parse-filters.ts` — `URLSearchParams` → `ApplicationFilters`
+- `filters/serialize-filters.ts` — `ApplicationFilters` → `URLSearchParams`
+- `filters/matches-search.ts` — text search predicate over an `ApplicationRow`
+
+Search input is debounced via `hooks/useDebouncedValue.tsx` before being written to the URL.
 
 ### Component organisation
 
-- `components/applications/` — feature components tied to the applications domain (table, form, badges, row actions).
+- `components/applications/` — feature components for the applications domain (table, form, badges, row actions, per-application header).
 - `components/<Feature>/` — other domain-specific UI blocks (Dashboard, NavBar, StatCard, etc.).
-- `components/ui/` — shadcn/ui primitives only; don't put custom logic here.
+- `components/ui/` — shadcn/ui primitives only; no custom logic here.
+- `components/providers.tsx` — wraps the tree with `QueryClientProvider` (TanStack Query); mounted in the root layout.
+- `hooks/` — project-wide React hooks (currently `useDebouncedValue`).
 
 ### Domain types
 
 `lib/applications/types.ts` defines `ApplicationRow` — the shape used by UI components after mapping from raw Prisma output. `lib/applications/map-application.ts` handles that mapping. Prisma enums (`JobType`, `Status`) are imported from `lib/generated/prisma/enums`.
+
+`techStack` is stored in Postgres as a single delimited string (`,` `;` `|` `/`) and split into an array by `parseStack()` in `map-application.ts` — never store or expect an array from the DB.

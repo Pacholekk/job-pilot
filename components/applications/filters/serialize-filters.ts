@@ -5,6 +5,7 @@ export const serializeApplicationFilters = (
   filters: ApplicationFilters,
 ): URLSearchParams => {
   const nextParams = new URLSearchParams(params.toString());
+  nextParams.set("page", "1");
   if (filters.status === "all") nextParams.delete("status");
   else {
     nextParams.set("status", filters.status);

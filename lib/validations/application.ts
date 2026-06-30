@@ -23,7 +23,10 @@ export const applicationSchema = z.object({
   company: z.string().min(1, "Company is required"),
   position: z.string().min(1, "position is required"),
   location: z.string().min(1, "location is required"),
-  offerUrl: z.url().min(1, "offerUrl is required").optional(),
+  offerUrl: z
+    .string()
+    .transform((offer) => (offer === "" ? undefined : offer))
+    .pipe(z.url().optional()),
   jobType: jobType,
   status: status,
   techStack: z.string().min(1, "Tech stack is required"),
@@ -31,4 +34,5 @@ export const applicationSchema = z.object({
   jobDescription: z.string().min(1, "Job description is required"),
 });
 
-export type ApplicationFormData = z.infer<typeof applicationSchema>;
+export type ApplicationFormData = z.input<typeof applicationSchema>;
+export type ApplicationFormOutput = z.output<typeof applicationSchema>;

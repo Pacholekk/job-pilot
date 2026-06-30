@@ -2,25 +2,31 @@
 
 import { ApplicationFilters, ApplicationRow } from "@/lib/applications/types";
 import ApplicationsTable from "./ApplicationsTable";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import FilteringSection from "../FilteringSection/FilteringSection";
 import { useRouter, useSearchParams } from "next/navigation";
 import { parseApplicationFilters } from "./filters/parse-filters";
 import { serializeApplicationFilters } from "./filters/serialize-filters";
-import { matchesSearch } from "./filters/matches-search";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { Button } from "../ui/button";
 
 interface ApplicationListProps {
   initialRows: ApplicationRow[];
+  total: number;
+  totalPages: number;
+  page: number;
 }
 
-export default function ApplicationList({ initialRows }: ApplicationListProps) {
+export default function ApplicationList({
+  initialRows,
+  totalPages,
+  page,
+}: ApplicationListProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const initialFilters = parseApplicationFilters(
-    new URLSearchParams(searchParams.toString()),
-  );
+  const initialFilters = parseApplicationFilters(new URLSearchParams(params));
   const [filters, setFilters] = useState<ApplicationFilters>(initialFilters);
   const handleFiltersChange = (nextFilters: ApplicationFilters) => {
     if (
@@ -32,10 +38,24 @@ export default function ApplicationList({ initialRows }: ApplicationListProps) {
       return;
     }
     const params = serializeApplicationFilters(searchParams, nextFilters);
-    router.replace(`/applications?${params.toString()}`);
+    router.replace(`/applications?${params}`);
     setFilters(nextFilters);
   };
   const debouncedSearch = useDebouncedValue(filters.search, 500);
+  const handleNext = () => {
+    if (page >= 1 && page < totalPages) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", String(page + 1));
+      router.replace(`/applications?${params.toString()}`);
+    }
+  };
+  const handlePrev = () => {
+    if (page > 1 && page <= totalPages) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", String(page - 1));
+      router.replace(`/applications?${params.toString()}`);
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -50,26 +70,24 @@ export default function ApplicationList({ initialRows }: ApplicationListProps) {
     router.replace(`/applications?${params.toString()}`);
   }, [debouncedSearch, router, searchParams]);
 
-  const filteredRows = useMemo(() => {
-    return initialRows.filter((row) => {
-      const jobTypeMatches =
-        filters.jobType === "all" || row.jobType === filters.jobType;
-
-      const statusMatches =
-        filters.status === "all" || row.status === filters.status;
-      const searchMatches = matchesSearch(row, debouncedSearch);
-
-      return jobTypeMatches && statusMatches && searchMatches;
-    });
-  }, [filters.status, filters.jobType, initialRows, debouncedSearch]);
-
   return (
     <>
       <FilteringSection
         filters={filters}
         onFiltersChange={handleFiltersChange}
       />
-      <ApplicationsTable applications={filteredRows} />
+      <ApplicationsTable applications={initialRows} />
+      <div className="flex  mt-10 justify-center gap-5 min-h-max">
+        <Button onClick={handlePrev} disabled={page < 2}>
+          Prev
+        </Button>
+        <span className="mt-1">
+          Page: {page} of {totalPages}
+        </span>
+        <Button onClick={handleNext} disabled={page === totalPages}>
+          Next
+        </Button>
+      </div>
     </>
   );
 }
