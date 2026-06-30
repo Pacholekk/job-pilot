@@ -1,15 +1,11 @@
-"use client";
 import { SquarePen } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import ApplicationStatusBadge from "@/components/applications/ApplicationStatusBadge";
 import type { ApplicationStatus } from "@/components/ItemsSection/ItemsList/Item/Item";
-import { JobType, Status } from "@/lib/generated/prisma/enums";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { applicationSchema } from "@/lib/validations/application";
+import { JobType } from "@/lib/generated/prisma/enums";
+import { StatusSelect } from "./StatusSelect";
 
 interface ApplicationHeaderProps {
   id: string;
@@ -30,29 +26,6 @@ export default function ApplicationHeader({
   status,
   jobType,
 }: ApplicationHeaderProps) {
-  const [appStatus, setAppStatus] = useState<Status>(status);
-  const router = useRouter();
-  const mutation = useMutation({
-    mutationFn: async (newStatus: Status) => {
-      const response = await fetch(`/api/applications/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ status: newStatus }),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response.ok) throw new Error("Failed to change status");
-    },
-    onSuccess: () => router.refresh(),
-    onError: () => alert("Failed to change status"),
-  });
-
-  const updateApplicationStatus = (id: number, status: string) => {
-    const validStatus = applicationSchema
-      .pick({ status: true })
-      .safeParse({ status });
-
-    if (!validStatus.success) throw new Error("Failed validating status");
-  };
-
   return (
     <div className="rounded-2xl border bg-card p-6">
       <div className="flex items-start gap-5">
@@ -80,22 +53,7 @@ export default function ApplicationHeader({
                 Edit
               </Link>
             </Button>
-            <select
-              className="border-1 border-gray-200 rounded-xl appearance-none px-3 py-1"
-              value={appStatus}
-              onChange={(e) => {
-                const next = e.target.value as Status;
-                setAppStatus(next);
-                mutation.mutate(next);
-              }}
-            >
-              {" "}
-              {Object.values(Status).map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
+            <StatusSelect id={Number(id)} currentStatus={status} />
           </div>
         </div>
       </div>

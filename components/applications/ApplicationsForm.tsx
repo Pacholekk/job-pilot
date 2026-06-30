@@ -47,8 +47,9 @@ export default function ApplicationForm({
     },
     onSuccess: () => router.push("/applications"),
   });
+
   const onSubmit = async (data: ApplicationFormData) => {
-    mutation.mutate(data);
+    await mutation.mutate(data);
   };
 
   return (
