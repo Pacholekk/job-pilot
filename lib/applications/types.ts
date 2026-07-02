@@ -14,6 +14,11 @@ export interface ApplicationRow {
   salaryRange: string;
   addedAt: Date;
 }
+export interface StatusSegment {
+  label: string;
+  count: number;
+  color: string;
+}
 
 export interface ApplicationFilters {
   search: string;

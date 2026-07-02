@@ -1,22 +1,10 @@
-import type { Application, JobType } from "@/lib/generated/prisma/client";
+import type { Application } from "@/lib/generated/prisma/client";
 import type {
   ApplicationStatus,
   ItemProps,
 } from "@/components/ItemsSection/ItemsList/Item/Item";
-import type { StatusSegment } from "@/components/ApplicationStatus/ApplicationStatus";
-import type { ApplicationRow } from "./types";
 
-export const statuses: ApplicationStatus[] = [
-  "Saved",
-  "Applied",
-  "Screening",
-  "Interview",
-  "Ghosted",
-  "Offer",
-  "Rejected",
-];
-
-export const jobTypes: JobType[] = ["Remote", "Hybrid", "Onsite"];
+import type { ApplicationRow, StatusSegment } from "./types";
 
 function getCompanyInitials(company: string) {
   return company

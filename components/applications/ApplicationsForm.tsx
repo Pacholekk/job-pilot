@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { JobType } from "@/lib/generated/prisma/enums";
 
 type ApplicationFormProps = {
   defaultValues?: ApplicationFormData;
@@ -138,10 +139,11 @@ export default function ApplicationForm({
           className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           aria-invalid={!!errors.jobType}
         >
-          <option value="">Select job type</option>
-          <option value="Onsite">On-site</option>
-          <option value="Remote">Remote</option>
-          <option value="Hybrid">Hybrid</option>
+          {Object.values(JobType).map((j) => (
+            <option key={j} value={j}>
+              {j}
+            </option>
+          ))}
         </select>
         {errors.jobType && (
           <span className="text-sm text-destructive">

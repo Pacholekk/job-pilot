@@ -1,23 +1,11 @@
 import { z } from "zod";
+import { JobType, Status } from "../generated/prisma/enums";
 
-const jobType = z.enum(["Hybrid", "Onsite", "Remote"], {
-  error: "Job type is required",
+const jobType = z.enum(JobType, { error: "Job type is required" });
+
+const status = z.enum(Status, {
+  error: "Status is required",
 });
-
-const status = z.enum(
-  [
-    "Saved",
-    "Applied",
-    "Screening",
-    "Interview",
-    "Ghosted",
-    "Offer",
-    "Rejected",
-  ],
-  {
-    error: "Status is required",
-  },
-);
 
 export const applicationSchema = z.object({
   company: z.string().min(1, "Company is required"),

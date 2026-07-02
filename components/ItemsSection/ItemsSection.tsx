@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ItemsList, { type ItemsListProps } from "./ItemsList/ItemsList";
+import Link from "next/link";
 
 export interface ItemsSectionProps extends ItemsListProps {
   title: string;
@@ -23,8 +24,8 @@ export default function ItemsSection({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardAction>
-          <Button variant="ghost" size="sm">
-            {actionLabel}
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/applications"> {actionLabel}</Link>
           </Button>
         </CardAction>
       </CardHeader>

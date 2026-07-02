@@ -1,34 +1,21 @@
-import AiInsights from "@/components/AiInsights/AiInsights";
-import ApplicationStatus from "@/components/ApplicationStatus/ApplicationStatus";
 import ItemsSection from "@/components/ItemsSection/ItemsSection";
 import StatCard, { type StatCardProps } from "@/components/StatCard/StatCard";
-import type { StatusSegment } from "@/components/ApplicationStatus/ApplicationStatus";
 
-import {
-  mapApplicationToItem,
-  mapStatusCountToSegment,
-} from "@/lib/applications/map-application";
-import { prisma } from "@/lib/prisma";
+import { ItemProps } from "../ItemsSection/ItemsList/Item/Item";
+import { StatusSegment } from "@/lib/applications/types";
+import ApplicationStatus from "../ApplicationStatus/ApplicationStatus";
 
 export interface DashboardProps {
   stats: StatCardProps[];
   statusData: StatusSegment[];
-  insights: string[];
+  recentApplications: ItemProps[];
 }
 
-export default async function Dashboard({ stats, insights }: DashboardProps) {
-  const applications = await prisma.application.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
-  const statusesCount = await prisma.application.groupBy({
-    by: ["status"],
-    _count: {
-      status: true,
-    },
-  });
-  const recentApplications = applications.map(mapApplicationToItem);
-  const statusData = mapStatusCountToSegment(statusesCount);
+export default async function Dashboard({
+  stats,
+  statusData,
+  recentApplications,
+}: DashboardProps) {
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -46,7 +33,6 @@ export default async function Dashboard({ stats, insights }: DashboardProps) {
         </div>
         <div className="flex flex-col gap-6">
           <ApplicationStatus data={statusData} />
-          <AiInsights insights={insights} />
         </div>
       </div>
     </div>

@@ -1,14 +1,8 @@
 import { Badge } from "@/components/ui/badge";
+import { Status } from "@/lib/generated/prisma/enums";
 import { cn } from "@/lib/utils";
 
-export type ApplicationStatus =
-  | "Saved"
-  | "Applied"
-  | "Screening"
-  | "Interview"
-  | "Ghosted"
-  | "Offer"
-  | "Rejected";
+export type ApplicationStatus = Status;
 
 export interface ItemProps {
   companyInitials: string;

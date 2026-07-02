@@ -1,15 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-export interface StatusSegment {
-  label: string;
-  count: number;
-  color: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusSegment } from "@/lib/applications/types";
 
 export interface ApplicationStatusProps {
   title?: string;

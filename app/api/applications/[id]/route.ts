@@ -64,14 +64,15 @@ export async function PATCH(
     );
 
   try {
+    if (Object.keys(parsed.data).length === 0)
+      return NextResponse.json({ error: "Notging to update" }, { status: 400 });
     const application = await prisma.application.update({
       where: {
         id: applicationId,
       },
       data: parsed.data,
     });
-    if (Object.keys(parsed.data).length === 0)
-      return NextResponse.json({ error: "Notging to update" }, { status: 400 });
+
     return NextResponse.json(application, { status: 200 });
   } catch {
     return NextResponse.json(
