@@ -15,7 +15,7 @@ export const applicationSchema = z.object({
     .string()
     .optional()
     .transform((offer) => (offer === "" ? undefined : offer))
-    .pipe(z.url()),
+    .pipe(z.url().optional()),
   jobType: jobType,
   status: status,
   techStack: z.string().min(1, "Tech stack is required"),
