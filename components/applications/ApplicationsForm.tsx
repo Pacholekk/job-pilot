@@ -43,14 +43,24 @@ export default function ApplicationForm({
           headers: { "Content-Type": "application/json" },
         },
       );
-      if (!response.ok) throw new Error("Nie udało się zapisać aplikacji");
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as {
+          errors?: Record<string, string[]>;
+        } | null;
+
+        const firstError = body?.errors
+          ? Object.values(body.errors).flat()[0]
+          : undefined;
+
+        throw new Error(firstError ?? "Nie udało się zapisać aplikacji");
+      }
       return response.json();
     },
     onSuccess: () => router.push("/applications"),
   });
 
-  const onSubmit = async (data: ApplicationFormOutput) => {
-    await mutation.mutate(data);
+  const onSubmit = (data: ApplicationFormOutput) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -111,6 +121,7 @@ export default function ApplicationForm({
           {...register("offerUrl")}
           placeholder="https://..."
           aria-invalid={!!errors.offerUrl}
+          defaultValue={""}
         />
         {errors.offerUrl && (
           <span className="text-sm text-destructive">
@@ -213,7 +224,9 @@ export default function ApplicationForm({
       <Button type="submit" className="mt-2 w-fit" disabled={isSubmitting}>
         {isSubmitting ? "Saving..." : "Save application"}
       </Button>
-      {errors.root && <p className="text-red-500">{errors.root.message}</p>}
+      {mutation.isError && (
+        <p className="text-red-500">{mutation.error.message}</p>
+      )}
     </form>
   );
 }

@@ -1,41 +1,6 @@
 import Dashboard from "@/components/Dasboard/Dashboard";
 import PageHeader from "@/components/PageHeader/PageHeader";
-
-const mockStats = [
-  {
-    label: "Total applications",
-    value: 24,
-    trend: "+3 this week",
-    trendColor: "positive" as const,
-  },
-  {
-    label: "Applied this week",
-    value: 5,
-    trend: "+2 vs last week",
-    trendColor: "positive" as const,
-  },
-  {
-    label: "Interviews",
-    value: 3,
-    trend: "1 upcoming",
-    trendColor: "neutral" as const,
-  },
-  {
-    label: "Response rate",
-    value: "42%",
-    trend: "+6%",
-    trendColor: "positive" as const,
-  },
-];
-
-const mockStatusData = [
-  { label: "Saved", count: 4, color: "#9ca3af" },
-  { label: "Screening", count: 5, color: "#f97316" },
-  { label: "Offer", count: 1, color: "#10b981" },
-  { label: "Applied", count: 7, color: "#3b82f6" },
-  { label: "Interview", count: 3, color: "#a855f7" },
-  { label: "Rejected", count: 4, color: "#ef4444" },
-];
+import { getDashboardStats } from "@/lib/dashboard/get-stats";
 
 const mockInsights = [
   "Stripe and Supabase roles have the highest match scores (90+).",
@@ -73,19 +38,15 @@ const mockOffers = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const dashboardStats = await getDashboardStats();
   return (
     <>
       <PageHeader
         title="Dashboard"
         description="Track your job search progress and AI insights."
       />
-      <Dashboard
-        stats={mockStats}
-        statusData={mockStatusData}
-        insights={mockInsights}
-        offers={mockOffers}
-      />
+      <Dashboard stats={dashboardStats} insights={mockInsights} />
     </>
   );
 }

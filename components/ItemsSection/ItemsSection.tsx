@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ItemsList, { type ItemsListProps } from "./ItemsList/ItemsList";
-import { AwardIcon } from "lucide-react";
 
 export interface ItemsSectionProps extends ItemsListProps {
   title: string;

@@ -54,14 +54,17 @@ app/applications/page.tsx  →  lib/prisma.ts  →  PostgreSQL
 
 **REST routes** (`app/api/applications/`) still exist for `POST` (create) and `PUT`/`DELETE` (update/delete), validated via `applicationSchema` from `lib/validations/application.ts`.
 
-### Filtering
+### Filtering & pagination
 
-Filtering is **client-side only** — all rows are passed as `initialRows` props at SSR time. `ApplicationList` syncs active filters to URL search params (so links are shareable) and memoises the filtered subset. Filter helpers:
+Filtering, sorting and pagination are **server-side**. `app/applications/page.tsx` reads them from `searchParams` (`status`, `jobType`, `search`, `page`, `pageSize`, `sortBy`, `sortOrder`), builds a Prisma `where` clause (enum filters validated by `isValidStatus`/`isValidJobType`, text `search` as `OR` over `company`/`position`), and runs `findMany({ where, skip, take, orderBy })` alongside a `count({ where })` in a single `Promise.all`. So `initialRows` is already the filtered, sorted, current page — **not** the full dataset. `totalPages`/`total`/`page` are passed down for the pager.
+
+`ApplicationList` (client) owns the URL: it syncs active filters to search params (so links are shareable) via `router.replace`, and drives the Prev/Next pager the same way. Filter helpers:
 - `filters/parse-filters.ts` — `URLSearchParams` → `ApplicationFilters`
 - `filters/serialize-filters.ts` — `ApplicationFilters` → `URLSearchParams`
+- `filters/filters.ts` — `isValidStatus` / `isValidJobType` enum guards (used server-side)
 - `filters/matches-search.ts` — text search predicate over an `ApplicationRow`
 
-Search input is debounced via `hooks/useDebouncedValue.tsx` before being written to the URL.
+Search input is debounced via `hooks/useDebouncedValue.tsx` before being written to the URL (a filter change that only touches `search` updates local state and lets the debounce push it; changing `status`/`jobType` navigates immediately).
 
 ### Component organisation
 

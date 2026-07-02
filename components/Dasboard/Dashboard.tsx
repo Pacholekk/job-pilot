@@ -1,10 +1,9 @@
 import AiInsights from "@/components/AiInsights/AiInsights";
 import ApplicationStatus from "@/components/ApplicationStatus/ApplicationStatus";
-import BestMatchingOffers from "@/components/BestMatchingOffers/BestMatchingOffers";
 import ItemsSection from "@/components/ItemsSection/ItemsSection";
 import StatCard, { type StatCardProps } from "@/components/StatCard/StatCard";
 import type { StatusSegment } from "@/components/ApplicationStatus/ApplicationStatus";
-import type { OfferCardProps } from "@/components/BestMatchingOffers/OfferCard/OfferCard";
+
 import {
   mapApplicationToItem,
   mapStatusCountToSegment,
@@ -15,14 +14,9 @@ export interface DashboardProps {
   stats: StatCardProps[];
   statusData: StatusSegment[];
   insights: string[];
-  offers: OfferCardProps[];
 }
 
-export default async function Dashboard({
-  stats,
-  insights,
-  offers,
-}: DashboardProps) {
+export default async function Dashboard({ stats, insights }: DashboardProps) {
   const applications = await prisma.application.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
@@ -55,8 +49,6 @@ export default async function Dashboard({
           <AiInsights insights={insights} />
         </div>
       </div>
-
-      <BestMatchingOffers offers={offers} />
     </div>
   );
 }

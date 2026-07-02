@@ -25,8 +25,9 @@ export const applicationSchema = z.object({
   location: z.string().min(1, "location is required"),
   offerUrl: z
     .string()
+    .optional()
     .transform((offer) => (offer === "" ? undefined : offer))
-    .pipe(z.url().optional()),
+    .pipe(z.url()),
   jobType: jobType,
   status: status,
   techStack: z.string().min(1, "Tech stack is required"),
