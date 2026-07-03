@@ -12,12 +12,17 @@ export const updateApplicationStatus = async (id: number, status: string) => {
   if (!validStatus.success) throw new Error("Failed validating status");
 
   try {
-    await prisma.application.update({
-      where: {
-        id,
-      },
-      data: validStatus.data,
-    });
+    await prisma.$transaction([
+      prisma.application.update({
+        where: {
+          id,
+        },
+        data: validStatus.data,
+      }),
+      prisma.applicationStatusHistory.create({
+        data: { applicationId: id, status: validStatus.data.status },
+      }),
+    ]);
     revalidatePath(`/applications/${id}`);
   } catch {
     throw new Error("Failed to update status");

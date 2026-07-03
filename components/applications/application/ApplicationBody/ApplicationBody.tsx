@@ -20,7 +20,7 @@ export default function ApplicationBody({
   return (
     <div className="border rounded-2xl mt-10 p-8">
       <h2 className="text-xl font-semibold">Job details</h2>
-      <div className="grid grid-cols-2  gap-x-16 gap-y-8 mt-5">
+      <div className="grid grid-cols-2  gap-x-16 gap-y-4 mt-5">
         <div className="flex flex-col gap-2">
           <span className="text-sm text-gray-500">Location</span>
           <span>{location}</span>
