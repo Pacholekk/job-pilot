@@ -45,7 +45,7 @@ export function mapStatusCountToSegment(items: StatusCount[]): StatusSegment[] {
     color: statusColors[item.status],
   }));
 }
-function parseStack(techStack: string) {
+export function parseStack(techStack: string) {
   return techStack
     .split(/[,;|/]/)
     .map((item) => item.trim())

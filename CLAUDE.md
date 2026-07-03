@@ -49,10 +49,10 @@ app/applications/page.tsx  →  lib/prisma.ts  →  PostgreSQL
 ```
 
 **Mutations use Server Actions** (`app/applications/actions.ts`, `"use server"`):
-- Validate with `applicationSchema`, write via Prisma, then call `revalidatePath()` to bust the page cache.
+- Validate with `applicationSchema` (use `.pick()` for partial updates), write via Prisma, then call `revalidatePath()` to bust the page cache.
 - Client components call the action directly — no `fetch` needed.
 
-**REST routes** (`app/api/applications/`) still exist for `POST` (create) and `PUT`/`DELETE` (update/delete), validated via `applicationSchema` from `lib/validations/application.ts`.
+**REST routes** (`app/api/applications/` and `[id]/`) still exist for `GET`/`POST` (list/create) and `PUT`/`PATCH`/`DELETE`, validated via `applicationSchema` from `lib/validations/application.ts`. New mutations should prefer Server Actions; the REST routes predate them.
 
 ### Filtering & pagination
 
@@ -65,6 +65,13 @@ Filtering, sorting and pagination are **server-side**. `app/applications/page.ts
 - `filters/matches-search.ts` — text search predicate over an `ApplicationRow`
 
 Search input is debounced via `hooks/useDebouncedValue.tsx` before being written to the URL (a filter change that only touches `search` updates local state and lets the debounce push it; changing `status`/`jobType` navigates immediately).
+
+### Pages
+
+- `/` — dashboard. Data comes from `lib/dashboard/get-stats.ts` (`Promise.all` of `findMany` + `groupBy` by status + three `count`s), rendered by `components/Dasboard/Dashboard.tsx` (note the folder typo).
+- `/applications` — filterable table (see above).
+- `/applications/[id]` — detail view composed from `components/applications/application/`: `ApplicationHeader` (identity + `StatusSelect`, which calls the `updateApplicationStatus` server action) and `ApplicationBody` (job details). The page queries Prisma directly and passes scalar props, not a whole `ApplicationRow`.
+- `/applications/new`, `/applications/edit/[id]` — form (`ApplicationsForm`, React Hook Form + Zod resolver).
 
 ### Component organisation
 
@@ -79,3 +86,9 @@ Search input is debounced via `hooks/useDebouncedValue.tsx` before being written
 `lib/applications/types.ts` defines `ApplicationRow` — the shape used by UI components after mapping from raw Prisma output. `lib/applications/map-application.ts` handles that mapping. Prisma enums (`JobType`, `Status`) are imported from `lib/generated/prisma/enums`.
 
 `techStack` is stored in Postgres as a single delimited string (`,` `;` `|` `/`) and split into an array by `parseStack()` in `map-application.ts` — never store or expect an array from the DB.
+
+Nullable DB fields (`salary Int?`, `offerUrl String?`) surface as `T | null` from Prisma — type component props as `T | null`, not `T?` (optional means `undefined`, which is a different type).
+
+**`matchScore` is fake.** `deriveMatchScore()` in `map-application.ts` computes it deterministically from the row id, and `formatSalary()` invents the upper bound of the salary range. Both are placeholders until the AI integration lands — don't treat them as real data or build logic on top of them.
+
+`src/` at the repo root is an empty leftover directory — all code lives in `app/`, `components/`, `lib/`, `hooks/`.

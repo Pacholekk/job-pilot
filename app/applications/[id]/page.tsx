@@ -1,4 +1,6 @@
+import ApplicationBody from "@/components/applications/application/ApplicationBody/ApplicationBody";
 import ApplicationHeader from "@/components/applications/application/ApplicationHeader/ApplicationHeader";
+import { parseStack } from "@/lib/applications/map-application";
 import { prisma } from "@/lib/prisma";
 
 import { notFound } from "next/navigation";
@@ -35,6 +37,14 @@ export default async function ViewApplicationPage({
         location={application.location}
         status={application.status}
         jobType={application.jobType}
+      />
+      <ApplicationBody
+        location={application.location}
+        status={application.status}
+        jobType={application.jobType}
+        jobDescription={application.jobDescription}
+        techStack={parseStack(application.techStack)}
+        salary={application.salary}
       />
     </div>
   );

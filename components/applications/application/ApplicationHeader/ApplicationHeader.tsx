@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import ApplicationStatusBadge from "@/components/applications/ApplicationStatusBadge";
 import type { ApplicationStatus } from "@/components/ItemsSection/ItemsList/Item/Item";
 import { JobType } from "@/lib/generated/prisma/enums";
-import { StatusSelect } from "./StatusSelect";
+import { StatusSelect } from "../StatusSelect/StatusSelect";
 
 interface ApplicationHeaderProps {
   id: string;
