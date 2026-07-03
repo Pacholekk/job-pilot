@@ -1,12 +1,18 @@
 import { JobType, Status } from "@/lib/generated/prisma/enums";
 
+type StatusHistoryEntry = {
+  id: number;
+  status: Status;
+  createdAt: Date;
+};
+
 interface ApplicationBodyProps {
   location: string;
   jobDescription: string;
   jobType: JobType;
   salary: number | null;
   techStack: string[];
-  status: Status;
+  statusHistory: StatusHistoryEntry[];
 }
 
 export default function ApplicationBody({
@@ -15,7 +21,7 @@ export default function ApplicationBody({
   jobDescription,
   techStack,
   salary,
-  status,
+  statusHistory,
 }: ApplicationBodyProps) {
   return (
     <div className="border rounded-2xl mt-10 p-8">

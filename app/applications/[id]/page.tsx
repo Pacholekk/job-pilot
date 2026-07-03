@@ -21,6 +21,9 @@ export default async function ViewApplicationPage({
     where: {
       id: applicationId,
     },
+    include: {
+      statusHistory: { orderBy: { createdAt: "asc" } },
+    },
   });
 
   if (!application) {
@@ -40,7 +43,7 @@ export default async function ViewApplicationPage({
       />
       <ApplicationBody
         location={application.location}
-        status={application.status}
+        statusHistory={application.statusHistory}
         jobType={application.jobType}
         jobDescription={application.jobDescription}
         techStack={parseStack(application.techStack)}
